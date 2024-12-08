@@ -11,7 +11,7 @@ SDL_Renderer* renderer = nullptr;
 
 struct Paddle {
 	int x, y, w,  h;
-	int velY;//Velocity Y
+	int velY;
 };
 
 struct Ball {
@@ -19,7 +19,7 @@ struct Ball {
 	int velX, velY;
 };
 
-Paddle leftPaddle = {50, WINDOW_HEIGHT / 2 - 50, 15, 100, 0};
+Paddle leftPaddle = {50, WINDOW_HEIGHT / 2 - 50, 15, 100, 10};
 Paddle rightPaddle = { WINDOW_WIDTH - 65, WINDOW_HEIGHT / 2 - 50, 15, 100, 0 };
 Ball ball = { WINDOW_WIDTH / 2 - 10, WINDOW_HEIGHT / 2 - 10, 20, 20, 5, 5 };
 
@@ -67,6 +67,12 @@ void close() {
 	SDL_Quit();
 }
 
+void paddleBoundries() {
+	if (leftPaddle.y <= 0) {
+		leftPaddle.y = leftPaddle.y;
+	}
+}
+
 int main(int argc, char* argv[]) {
 	if (!init()) {
 		std::cerr << "Failed to initialize SDL2!" << std::endl;
@@ -74,18 +80,34 @@ int main(int argc, char* argv[]) {
 	}
 
 	bool quit = false;
-	SDL_Event e;
+	SDL_Event event;
 
 	while (!quit) {
-		while (SDL_PollEvent(&e) != 0)
+		while (SDL_PollEvent(&event) != 0)
 		{
-			if (e.type == SDL_QUIT) {
+			if (event.type == SDL_QUIT) {
 				quit = true;
+			}
+
+			if (event.type == SDL_KEYDOWN) {
+				switch (event.key.keysym.sym)
+				{
+					case SDLK_w:
+						leftPaddle.y -= leftPaddle.velY;
+						break;
+					case SDLK_s:
+						leftPaddle.y += leftPaddle.velY;
+						break;
+				}
 			}
 		}
 
+		paddleBoundries();
+
 		ball.x += ball.velX;
 		ball.y += ball.velY;
+
+		rightPaddle.y = ball.y;
 
 		if (ball.y >= (WINDOW_HEIGHT - 23) || ball.y <= 0) {
 			ball.velY = -ball.velY;
