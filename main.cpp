@@ -84,8 +84,16 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		/*ball.x += ball.velX;
-		ball.y += ball.velY;*/
+		ball.x += ball.velX;
+		ball.y += ball.velY;
+
+		if (ball.y >= (WINDOW_HEIGHT - 23) || ball.y <= 0) {
+			ball.velY = -ball.velY;
+		}
+
+		if (ball.x <= 0 || ball.x >= (WINDOW_WIDTH - 22)){
+			ball.velX = -ball.velX;
+		}
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
