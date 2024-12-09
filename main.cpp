@@ -19,7 +19,7 @@ struct Ball {
 	int velX, velY;
 };
 
-Paddle leftPaddle = {50, WINDOW_HEIGHT / 2 - 50, 15, 100, 10};
+Paddle leftPaddle = {50, WINDOW_HEIGHT / 2 - 50, 15, 100, 15};
 Paddle rightPaddle = { WINDOW_WIDTH - 65, WINDOW_HEIGHT / 2 - 50, 15, 100, 0 };
 Ball ball = { WINDOW_WIDTH / 2 - 10, WINDOW_HEIGHT / 2 - 10, 20, 20, 5, 5 };
 
@@ -68,9 +68,7 @@ void close() {
 }
 
 void paddleBoundries() {
-	if (leftPaddle.y <= 0) {
-		leftPaddle.y = leftPaddle.y;
-	}
+	
 }
 
 int main(int argc, char* argv[]) {
@@ -92,17 +90,15 @@ int main(int argc, char* argv[]) {
 			if (event.type == SDL_KEYDOWN) {
 				switch (event.key.keysym.sym)
 				{
-					case SDLK_w:
+					case SDLK_UP:
 						leftPaddle.y -= leftPaddle.velY;
 						break;
-					case SDLK_s:
+					case SDLK_DOWN:
 						leftPaddle.y += leftPaddle.velY;
 						break;
 				}
 			}
 		}
-
-		paddleBoundries();
 
 		ball.x += ball.velX;
 		ball.y += ball.velY;
