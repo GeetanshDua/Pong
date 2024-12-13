@@ -23,6 +23,9 @@ Paddle leftPaddle = {50, WINDOW_HEIGHT / 2 - 50, 15, 100, 15};
 Paddle rightPaddle = { WINDOW_WIDTH - 65, WINDOW_HEIGHT / 2 - 50, 15, 100, 0 };
 Ball ball = { WINDOW_WIDTH / 2 - 10, WINDOW_HEIGHT / 2 - 10, 20, 20, 5, 5 };
 
+const int PADDLE_MIN_Y = 0;
+const int PADDLE_MAX_Y = WINDOW_HEIGHT - leftPaddle.h;
+
 bool init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		std::cerr << "SDL2 could not initialized! SDL_Error: " << SDL_GetError() << std::endl;
@@ -31,7 +34,7 @@ bool init() {
 
 	//Created the Window
 	window = SDL_CreateWindow(
-		"PONG",
+		"PONG CLASSIC",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		WINDOW_WIDTH,
@@ -67,10 +70,6 @@ void close() {
 	SDL_Quit();
 }
 
-void paddleBoundries() {
-	
-}
-
 int main(int argc, char* argv[]) {
 	if (!init()) {
 		std::cerr << "Failed to initialize SDL2!" << std::endl;
@@ -92,9 +91,17 @@ int main(int argc, char* argv[]) {
 				{
 					case SDLK_UP:
 						leftPaddle.y -= leftPaddle.velY;
+						if (leftPaddle.y < PADDLE_MIN_Y) {
+							leftPaddle.y = PADDLE_MIN_Y;
+						}
 						break;
 					case SDLK_DOWN:
 						leftPaddle.y += leftPaddle.velY;
+						if (leftPaddle.y > PADDLE_MAX_Y) {
+							leftPaddle.y = PADDLE_MAX_Y;
+						}
+						break;
+					default:
 						break;
 				}
 			}
@@ -105,7 +112,15 @@ int main(int argc, char* argv[]) {
 
 		rightPaddle.y = ball.y;
 
-		if (ball.y >= (WINDOW_HEIGHT - 23) || ball.y <= 0) {
+		if (rightPaddle.y < PADDLE_MIN_Y) {
+			rightPaddle.y = PADDLE_MIN_Y;
+		}
+
+		if (rightPaddle.y > PADDLE_MAX_Y) {
+			rightPaddle.y = PADDLE_MAX_Y;
+		}
+
+		if (ball.y >= (WINDOW_HEIGHT - 23) || ball.y <= 0){
 			ball.velY = -ball.velY;
 		}
 
